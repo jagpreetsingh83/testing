@@ -1,5 +1,6 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { cold, getTestScheduler } from 'jasmine-marbles';
 
 import { TwainComponent } from './twain.component';
 
@@ -56,4 +57,19 @@ describe('TwainComponent', () => {
     fixture.detectChanges();
     expect(quoteEl.textContent).toBe('my next quote', 'mark twain quote');
   }));
+
+  it('Marble Testing', () => {
+    const quoteEl = fixture.debugElement.query(By.css('.twain'))
+      .nativeElement as HTMLElement;
+
+    component.quote = cold('---a|', { a: 'marble quote' });
+
+    fixture.detectChanges();
+
+    getTestScheduler().flush();
+
+    fixture.detectChanges();
+
+    expect(quoteEl.textContent).toBe('marble quote', 'mark twain quote');
+  });
 });
